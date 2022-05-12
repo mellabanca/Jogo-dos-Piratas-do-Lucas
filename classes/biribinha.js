@@ -10,9 +10,17 @@ class Biribinha {
     }
 
     mostrar(){
+        if(keyIsDown(UP_ARROW)&&this.ang>-30 || keyDown("w")&&this.ang>-30){
+            this.ang-=1;
+        }
+        if(keyIsDown(DOWN_ARROW)&&this.ang<70 || keyDown("s")&&this.ang<70){
+            this.ang+=1;
+        }
      push();
+     translate(this.posX,this.posY);
+     rotate(this.ang);
      imageMode(CENTER);
-     image(this.lancador,this.posX,this.posY,this.lar,this.alt);
+     image(this.lancador,0,0,this.lar,this.alt);
      pop();
      image(this.estrutura,70,20,200,200);
     }

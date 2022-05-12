@@ -1,3 +1,26 @@
+//Revisão de Matrizes
+//Matriz: variável que pode armazenar vários valores
+//Exemplos de Matrizes
+var matriz1 = [20,385,14,56];
+//console.log(matriz1);
+
+var matriz2 = ["Melissa", 26, "Lucas", true];
+//console.log(matriz2);
+
+var matriz3 = [[23,57]     ,      [78,12]];
+//console.log(matriz3);
+
+//console.log(matriz1[2]);
+//console.log(matriz2[1]);
+//console.log(matriz3[0][1]);
+
+matriz1.push(1000);
+matriz1.push(520);
+//console.log(matriz1);
+
+
+
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
@@ -30,6 +53,7 @@ function setup() {
 
  castelo = Bodies.rectangle(160, 350, 160, 310, options);
  World.add(world,castelo);
+ angleMode(DEGREES);
  angulo = 20;
  biribinha = new Biribinha(180,110,130,100,angulo);
 
@@ -51,4 +75,9 @@ function draw() {
  pop();
    biribinha.mostrar();
    bomba.mostrar();
+}
+function keyReleased(){
+  if(keyCode === 32){
+    bomba.pular();
+  }
 }
