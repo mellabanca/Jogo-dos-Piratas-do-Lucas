@@ -5,6 +5,7 @@ class Bomba {
             isStatic: true
         }
         this.corpo = Bodies.circle(posX, posY, this.raio, options);
+        this.rastro = [];
         this.imagem = loadImage("./assets/cannonball.png");
         World.add(world,this.corpo);
     }
@@ -16,6 +17,15 @@ class Bomba {
         imageMode(CENTER);
         image(this.imagem, pos.x, pos.y, this.raio, this.raio);
         pop();
+
+        if(this.corpo.velocity.x > 0 && pos.x > 10){
+            var position = [pos.x, pos.y];
+            this.rastro.push(position);
+        }
+
+        for(var i = 0; i < this.rastro.length; i++){
+            image(this.imagem, this.rastro[i][0],this.rastro[i][1],5,5);
+        }
     }
     pular(){
         var newAngle = biribinha.ang - 28;

@@ -32,6 +32,7 @@ var engine, world, ground;
 var figurinha;
 var castelo, casteloImg;
 var bomba;
+var baladecanhao=[];
 
 function preload() {
   figurinha = loadImage("./assets/background.gif");
@@ -57,7 +58,7 @@ function setup() {
  angulo = 20;
  biribinha = new Biribinha(180,110,130,100,angulo);
 
- bomba = new Bomba(biribinha.posX, biribinha.posY);
+ 
  
 }
 
@@ -74,10 +75,23 @@ function draw() {
  image(casteloImg,castelo.position.x, castelo.position.y, 160, 310);
  pop();
    biribinha.mostrar();
-   bomba.mostrar();
+   for(var i=0; i<baladecanhao.length;i++ ){
+     fogodeartificio(baladecanhao[i],i)
+   }
 }
 function keyReleased(){
   if(keyCode === 32){
-    bomba.pular();
+    baladecanhao[baladecanhao.length-1].pular();
+  }
+}
+function keyPressed(){
+  if(keyCode === 32){
+    var bomba = new Bomba(biribinha.posX, biribinha.posY);
+    baladecanhao.push(bomba)
+  }
+}
+function fogodeartificio (bomba,i ){
+  if(bomba){
+    bomba.mostrar();
   }
 }
