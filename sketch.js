@@ -33,6 +33,7 @@ var figurinha;
 var castelo, casteloImg;
 var bomba;
 var baladecanhao=[];
+var invasor;
 
 function preload() {
   figurinha = loadImage("./assets/background.gif");
@@ -58,7 +59,7 @@ function setup() {
  angulo = 20;
  biribinha = new Biribinha(180,110,130,100,angulo);
 
- 
+ invasor = new Invasor(width-79, height-60, 170, 170, -80);
  
 }
 
@@ -78,6 +79,9 @@ function draw() {
    for(var i=0; i<baladecanhao.length;i++ ){
      fogodeartificio(baladecanhao[i],i)
    }
+
+   Matter.Body.setVelocity(invasor.corpo, {x: -0.9,y: 0});
+   invasor.mostrar();
 }
 function keyReleased(){
   if(keyCode === 32){
