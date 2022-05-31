@@ -34,10 +34,15 @@ var castelo, casteloImg;
 var bomba;
 var baladecanhao=[];
 var invasor;
+var bando=[];
+var bandoAnimation = [];
+var bandoDados, bandoSpritesheet;
 
 function preload() {
   figurinha = loadImage("./assets/background.gif");
   casteloImg = loadImage("./assets/tower.png");
+  bandoDados = loadJSON("./assets/boat/boat.json");
+  bandoSpritesheet = loadImage("./assets/boat/boat.png");
 }
 
 function setup() {
@@ -59,7 +64,13 @@ function setup() {
  angulo = 20;
  biribinha = new Biribinha(180,110,130,100,angulo);
 
- invasor = new Invasor(width-79, height-60, 170, 170, -80);
+ var bandoFrames = bandoDados.frames;
+ 
+ for(var i = 0; i < bandoFrames.length; i++){
+   var pos = bandoFrames[i].position;
+   var img = bandoSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+   bandoAnimation.push(img);
+ }
  
 }
 
@@ -78,10 +89,10 @@ function draw() {
    biribinha.mostrar();
    for(var i=0; i<baladecanhao.length;i++ ){
      fogodeartificio(baladecanhao[i],i)
+     esbarrar(i);
    }
 
-   Matter.Body.setVelocity(invasor.corpo, {x: -0.9,y: 0});
-   invasor.mostrar();
+   bandoep()
 }
 function keyReleased(){
   if(keyCode === 32){
@@ -97,5 +108,42 @@ function keyPressed(){
 function fogodeartificio (bomba,i ){
   if(bomba){
     bomba.mostrar();
+    if(bomba.corpo.position.x>=width||bomba.corpo.position.y>=height-50){
+      bomba.sumiu(i);
+    }
   }
 }
+function bandoep (){
+if (bando.length>0){
+  var randola=random(250,300);
+  if(bando[bando.length-1] === undefined || bando[bando.length-1].corpo.position.x<width-randola){
+    var pos=[-40,-60,-70,-20];
+    var pos2=random(pos);
+    var invasor = new Invasor(width, height-100, 170, 170, pos2, bandoAnimation);
+    bando.push(invasor);
+  }
+  for(var i=0; i<bando.length;i++ ){
+    if(bando[i]){
+      Matter.Body.setVelocity(bando[i].corpo, {x: -0.9,y: 0});
+      bando[i].mostrar();
+      bando[i].animar();
+    }
+  }
+}else{
+ var invasor = new Invasor(width, height-60, 170, 170, -80, bandoAnimation);
+ bando.push(invasor);
+}
+}
+function esbarrar(index){
+  for(var i=0; i<bando.length;i++ ){
+    if(baladecanhao[index]!== undefined && bando[i]!== undefined){
+      var colizao=Matter.SAT.collides(baladecanhao[index].corpo,bando[i].corpo)
+        if(colizao.collided){
+          bando[i].sumiu(i);
+          Matter.World.remove(world,baladecanhao[index].corpo);
+          delete baladecanhao[index];
+        }
+      }
+    }
+
+  }
