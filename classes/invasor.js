@@ -7,6 +7,7 @@ class Invasor {
         this.imagem = loadImage("./assets/boat.png");
         this.animacao = bandoAnimation;
         this.speed = 0.05;
+        this.by=false
         World.add(world,this.corpo);
     }
 
@@ -27,6 +28,11 @@ class Invasor {
         pop();
     }
     sumiu(index){
+        this.animacao = falhainvasao;
+        this.speed = 0.05;
+        this.lar = 300;
+        this.alt = 300;
+        this.by = true;
         setTimeout(()=>{
             Matter.World.remove(world,bando[index].corpo);
             delete bando[index];

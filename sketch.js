@@ -37,12 +37,23 @@ var invasor;
 var bando=[];
 var bandoAnimation = [];
 var bandoDados, bandoSpritesheet;
+var falhainvasao=[];
+var falhainvasaodados;
+var tibum;
+var aguaAnimation = [];
+var aguaDados;
+var aguaSpritesheet;
+var terminou = false;
 
 function preload() {
   figurinha = loadImage("./assets/background.gif");
   casteloImg = loadImage("./assets/tower.png");
   bandoDados = loadJSON("./assets/boat/boat.json");
   bandoSpritesheet = loadImage("./assets/boat/boat.png");
+  falhainvasaodados = loadJSON("./assets/boat/brokenBoat.json");
+  tibum = loadImage("./assets/boat/brokenBoat.png");
+  aguaDados = loadJSON("./assets/waterSplash/waterSplash.json");
+  aguaSpritesheet = loadImage("./assets/waterSplash/waterSplash.png");
 }
 
 function setup() {
@@ -71,7 +82,21 @@ function setup() {
    var img = bandoSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
    bandoAnimation.push(img);
  }
+ var tibumframes = falhainvasaodados.frames;
  
+ for(var i = 0; i < tibumframes.length; i++){
+   var pos = tibumframes[i].position;
+   var img = tibum.get(pos.x, pos.y, pos.w, pos.h);
+   falhainvasao.push(img);
+ }
+
+ var aguaframes = aguaDados.frames;
+ 
+ for(var i = 0; i < aguaframes.length; i++){
+   var pos = aguaframes[i].position;
+   var img = aguaSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+   aguaAnimation.push(img);
+ }
 }
 
 function draw() {
@@ -108,6 +133,7 @@ function keyPressed(){
 function fogodeartificio (bomba,i ){
   if(bomba){
     bomba.mostrar();
+    bomba.animar();
     if(bomba.corpo.position.x>=width||bomba.corpo.position.y>=height-50){
       bomba.sumiu(i);
     }
@@ -127,6 +153,11 @@ if (bando.length>0){
       Matter.Body.setVelocity(bando[i].corpo, {x: -0.9,y: 0});
       bando[i].mostrar();
       bando[i].animar();
+      var colizao = Matter.SAT.collides(castelo, bando[i].corpo);
+      if(colizao.collided && !bando[i].by){
+        terminou = true;
+        gameOver();
+      }
     }
   }
 }else{
@@ -146,4 +177,20 @@ function esbarrar(index){
       }
     }
 
+  }
+
+  function gameOver(){
+    swal({
+      title: "A conta chegou!",
+      text: "Obrigado por jogar!",
+      imageUrl: "https://raw.githubusercontent.com/whitehatjr/PiratesInvasion/main/assets/boat.png",
+      imageSize: "150x150",
+      confirmButtonText: "Jogar novamente"
+    },
+      function(botaoApertado){
+        if(botaoApertado){
+          location.reload();
+        }
+      }
+    )
   }
