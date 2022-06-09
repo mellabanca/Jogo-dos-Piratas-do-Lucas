@@ -44,6 +44,13 @@ var aguaAnimation = [];
 var aguaDados;
 var aguaSpritesheet;
 var terminou = false;
+var contas
+var paisagem
+var mais1dia
+var tiropelaculatra
+var impostoderenda = false
+//var corpopirata
+//var imagempirata
 
 function preload() {
   figurinha = loadImage("./assets/background.gif");
@@ -54,6 +61,11 @@ function preload() {
   tibum = loadImage("./assets/boat/brokenBoat.png");
   aguaDados = loadJSON("./assets/waterSplash/waterSplash.json");
   aguaSpritesheet = loadImage("./assets/waterSplash/waterSplash.png");
+  mais1dia = loadSound("./assets/cannon_explosion.mp3");
+  paisagem = loadSound("./assets/background_music.mp3");
+  tiropelaculatra = loadSound("./assets/cannon_water.mp3");
+  contas = loadSound("./assets/pirate_laugh.mp3");
+  imagempirata = loadImage("./assets/pirata.png");
 }
 
 function setup() {
@@ -101,8 +113,13 @@ function setup() {
 
 function draw() {
   background(189);
+  console.log(mouseY);
   image(figurinha, 0, 0, 1200, 600);
-
+  if(!paisagem.isPlaying()){
+    paisagem.play();
+    paisagem.setVolume(0.1);
+  
+  }
   Engine.update(engine);
  
  rect(ground.position.x, ground.position.y,width*2,1);
@@ -118,9 +135,11 @@ function draw() {
    }
 
    bandoep()
-}
+   }
 function keyReleased(){
   if(keyCode === 32){
+    mais1dia.play();
+    mais1dia.setVolume(0.3);
     baladecanhao[baladecanhao.length-1].pular();
   }
 }
@@ -136,6 +155,11 @@ function fogodeartificio (bomba,i ){
     bomba.animar();
     if(bomba.corpo.position.x>=width||bomba.corpo.position.y>=height-50){
       bomba.sumiu(i);
+      if(bomba.afundando === true){
+        tiropelaculatra.playMode("untilDone")
+        tiropelaculatra.play();
+        tiropelaculatra.setVolume(0.1);
+      }
     }
   }
 }
@@ -155,6 +179,15 @@ if (bando.length>0){
       bando[i].animar();
       var colizao = Matter.SAT.collides(castelo, bando[i].corpo);
       if(colizao.collided && !bando[i].by){
+        //A imagem tem que ser colocada quando tiver a colisão
+        //do navio com a torre
+        //Não precisa nem ter o corpo do pirata, só a imagem :)
+        image(imagempirata,128,400,100,100);
+      if(!impostoderenda && !contas.isPlaying()){
+        contas.play();
+        contas.setVolume(0.3);
+        impostoderenda = true
+      }
         terminou = true;
         gameOver();
       }
@@ -191,6 +224,7 @@ function esbarrar(index){
         if(botaoApertado){
           location.reload();
         }
-      }
-    )
+        }
+
+    ) 
   }
